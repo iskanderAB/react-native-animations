@@ -1,38 +1,52 @@
-import React, {useEffect, useRef} from 'react';
-import { Animated, Button, Easing, StyleSheet, Text, View } from 'react-native';
-import FlatListAnimation from './src/components/FlatListAnimation/FlatListAnimation';
+import React, {useEffect, useRef, useState} from 'react';
+import { Animated, ScrollView, View } from 'react-native';
 
 const App = () => {
-  const translate = useRef(new Animated.Value(0)).current;
-  useEffect(()=>{ 
-    Animated.timing(translate,{
-      toValue: 100,
-      duration: 1000,
-      useNativeDriver: true
-    }).start();
-  },[])
+  const [ headerShown, setHeaderShown ] = useState(false);
+
+  const scrolling = useRef(new Animated.Value(0)).current;
+
+  const translation = scrolling.interpolate({
+    inputRange: [100, 130],
+    outputRange: [-100, 0],
+    extrapolate: 'clamp'
+  })
+
+  useEffect(()=> { 
+    console.log(scrolling);
+  },[scrolling])
   return (
-    // <View style={styles.container}>
-    //     <Animated.View
-    //       style={{
-    //         width: 100,
-    //         height: 100,
-    //         backgroundColor: 'orangered',
-    //         transform: [{translateX: translate}]
-    //       }}
-    //     />
-    // </View>
-    <FlatListAnimation/>
+    <>
+      <Animated.View 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 80,
+          backgroundColor: 'tomato',
+          transform: [
+            {translateY: translation }
+          ],
+        }}>
+      </Animated.View>
+      <Animated.ScrollView
+        onScroll={Animated.event([
+          {
+            nativeEvent: {
+              contentOffset: {
+                y: scrolling
+              }
+            }
+          }
+        ]
+        ,{useNativeDriver: true})}
+        scrollEventThrottle={16}
+        style={{flex: 1}}
+      >
+        <View style={{ flex: 1, height: 1000 }}/>
+      </Animated.ScrollView>
+    </>
   );
 };
-
 export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent:'center',
-    alignItems: 'center'
-  },
-});
