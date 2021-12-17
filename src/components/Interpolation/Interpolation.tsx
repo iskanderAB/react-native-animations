@@ -1,6 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import { Animated, Button, Easing, StyleSheet, Text, View } from 'react-native';
-import FlatListAnimation from './src/components/FlatListAnimation/FlatListAnimation';
+import { Animated, StyleSheet, View } from 'react-native';
 
 const Interpolation = () => {
   const translate = useRef(new Animated.Value(0)).current;
